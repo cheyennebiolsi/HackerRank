@@ -1,18 +1,46 @@
-#Note: not actually using trie"
-
 from collections import Counter
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.count = 0
+        self.children = {}
+
+    def add(self):
+        self.count += 1
+
+    def getNodeWithValue(self, value):
+        if value not in self.children:
+            node = Node(value)
+            self.children[value] = node
+        return self.children[value]
+
+class Trie:
+    def __init__(self):
+        self.root = Node("ROOT")
+
+    def add(self, contact):
+        currentNode = self.root
+        for character in contact:
+            node = currentNode.getNodeWithValue(character)
+            node.add()
+            currentNode = node
+
+    def find(self, contact):
+        currentNode = self.root
+        for character in contact:
+            currentNode = currentNode.getNodeWithValue(character)
+        return currentNode.count
 
 class Solution:
     def __init__(self):
-        self.directory = Counter()
+        self.trie = Trie()
 
     def add(self, contact):
-        for endIndex in range(1, len(contact) + 1):
-            partial = contact[:endIndex]
-            self.directory[partial] += 1
-            
+        self.trie.add(contact)
+
     def find(self, contact):
-        return self.directory[contact]
+        return self.trie.find(contact)
 
 n = int(input().strip())
 solution = Solution()
@@ -22,4 +50,3 @@ for a0 in range(n):
         solution.add(contact)
     else:
         print(solution.find(contact))
-    
